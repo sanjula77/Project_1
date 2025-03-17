@@ -1,4 +1,4 @@
-name: Node.js CI/CD with AWS
+name: Node.js CI/CD with AWS & MongoDB
 
 on: push
 
@@ -36,7 +36,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-            # Check if container exists and remove it if it does
+            # Stop and remove existing container
             CONTAINER_ID=$(docker ps -aq -f name=project1_node-app)
             if [ -n "$CONTAINER_ID" ]; then
               docker stop project1_node-app
@@ -46,5 +46,7 @@ jobs:
             # Pull the latest Docker image
             docker pull sanjula77/project1_node-app
 
-            # Run the container
-            docker run -d -p 80:3000 --name project1_node-app sanjula77/project1_node-app
+            # Run the container with MongoDB URI
+            docker run -d -p 80:3000 --name project1_node-app \
+              -e MONGO_URI=${{ secrets.MONGO_URI }} \
+              sanjula77/project1_node-app
