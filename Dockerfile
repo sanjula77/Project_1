@@ -11,8 +11,8 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
-# Expose port
-EXPOSE 3000
+# Expose port 80 for external traffic
+EXPOSE 80
 
 # Start the application
 CMD ["node", "index.js"]
