@@ -36,17 +36,19 @@ jobs:
           username: ec2-user
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-            # Stop and remove existing container
+            echo "Stopping existing container if running..."
             CONTAINER_ID=$(docker ps -aq -f name=project1_node-app)
             if [ -n "$CONTAINER_ID" ]; then
-              docker stop project1_node-app
-              docker rm project1_node-app
+              docker stop project1_node-app && docker rm project1_node-app
             fi
 
-            # Pull the latest Docker image
-            docker pull sanjula77/project1_node-app
+            echo "Pulling latest Docker image..."
+            docker pull --no-cache sanjula77/project1_node-app
 
-            # Run the container with MongoDB URI
+            echo "Running new container..."
             docker run -d -p 80:3000 --name project1_node-app \
+              --restart unless-stopped \
               -e MONGO_URI=${{ secrets.MONGO_URI }} \
               sanjula77/project1_node-app
+
+            echo "Deployment completed successfully!"
