@@ -25,6 +25,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    # The following command will push the image to the Docker Hub repository
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,4 +38,4 @@ jobs:
         run: docker build -t sanjula77/project1_node-app .
 
       - name: Push Docker image
-        run: docker push sanjula77/project1_node-app
+        run: docker push sanjula77/project1_node-app 
