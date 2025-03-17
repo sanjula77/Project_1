@@ -43,12 +43,12 @@ jobs:
             fi
 
             echo "Pulling latest Docker image..."
-            docker pull --no-cache sanjula77/project1_node-app
+            docker pull sanjula77/project1_node-app  # Remove --no-cache
 
             echo "Running new container..."
             docker run -d -p 80:3000 --name project1_node-app \
               --restart unless-stopped \
               -e MONGO_URI=${{ secrets.MONGO_URI }} \
-              sanjula77/project1_node-app
+              sanjula77/project1_node-app  # Ensure image exists and is correct
 
             echo "Deployment completed successfully!"
