@@ -39,3 +39,47 @@ jobs:
 
       - name: Push Docker image
         run: docker push sanjula77/project1_node-app 
+
+
+name: Node.js CI/CD with AWS
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ec2-user
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
+          script: |
+            docker stop my-node-app || true
+            docker rm my-node-app || true
+            docker pull sanjula77/project1_node-app
+            docker run -d -p 80:3000 --name project1_node-app sanjula77/project1_node-app
