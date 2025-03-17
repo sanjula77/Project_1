@@ -36,7 +36,15 @@ jobs:
           username: ec2-user
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-            docker stop my-node-app || true
-            docker rm my-node-app || true
+            # Check if container exists and remove it if it does
+            CONTAINER_ID=$(docker ps -aq -f name=project1_node-app)
+            if [ -n "$CONTAINER_ID" ]; then
+              docker stop project1_node-app
+              docker rm project1_node-app
+            fi
+
+            # Pull the latest Docker image
             docker pull sanjula77/project1_node-app
+
+            # Run the container
             docker run -d -p 80:3000 --name project1_node-app sanjula77/project1_node-app
