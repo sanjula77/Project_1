@@ -8,14 +8,14 @@ const uri = process.env.MONGO_URI; // Get MongoDB URI from environment variable
 let db;
 MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((client) => {
-    db = client.db("test1");  // Change "mydatabase" to your actual DB name
+    db = client.db("sample_mflix");  // Change "mydatabase" to your actual DB name
     console.log("Connected to MongoDB Atlas");
   })
   .catch((err) => console.error("MongoDB connection error: ", err));
 
 app.get("/", async (req, res) => {
   try {
-    const collection = db.collection("test_collection1");
+    const collection = db.collection("comments");
     const result = await collection.findOne({});
     res.send(result || { message: "No data found" });
   } catch (err) {
